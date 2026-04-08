@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Harmony
  */
 @RestController
-@RequestMapping("/api/v1/test")
+@RequestMapping("/api/v1/testD")
 public class TestSignatureSimulatorController {
 
     private final DeviceRepository deviceRepository;
