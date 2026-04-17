@@ -24,6 +24,8 @@ public class SimulatedDeviceService {
     private final Map<String, PrivateKey> privateKeyStore = new HashMap<>();
     private final Map<String, PublicKey> publicKeyStore = new HashMap<>();
     
+    
+    
     private final DeviceRepository deviceRepo;
     
     public SimulatedDeviceService(DeviceRepository deviceRepo) {
@@ -33,6 +35,7 @@ public class SimulatedDeviceService {
     
     public String enrollDevice(String deviceUuid) throws Exception {
         
+        Device device = new Device();
         
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048);
@@ -41,12 +44,17 @@ public class SimulatedDeviceService {
 
         privateKeyStore.put(deviceUuid, keyPair.getPrivate());
         publicKeyStore.put(deviceUuid, keyPair.getPublic());
+        
+        PublicKey publicKey = keyPair.getPublic();
+        PrivateKey privateKey = keyPair.getPrivate();
+        
+        device.setDeviceUuid(deviceUuid);
+        device.setPublicKey(publicKey);
+        device.setPrivateKey(privateKey);
 
         return java.util.Base64.getEncoder()
                 .encodeToString(keyPair.getPublic().getEncoded());
         
-        Device device = new Device();
-        deviceRepo.save(device);
     }
 
     public String sign(String deviceUuid,

@@ -7,6 +7,8 @@ package com.simswap.attestation.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,8 +25,12 @@ public class Device {
     @Id
     private String deviceUuid;
 
-    private String publicKey;
+    //private String publicKey;
 
+    private PublicKey publicKey;
+    
+    private PrivateKey privateKey;
+    
     private Instant createdAt = Instant.now();
 
     private boolean revoked = false;
