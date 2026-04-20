@@ -28,7 +28,7 @@ public class AttestationController {
         this.service = service;
     }
 
-    @PostMapping("/enroll")
+    /**@PostMapping("/enroll")
     public Map<String, Object> enroll(@RequestBody Map<String, String> body) {
 
         service.enroll(
@@ -37,7 +37,7 @@ public class AttestationController {
         );
 
         return Map.of("success", true);
-    }
+    }**/
 
     @GetMapping("/challenge")
     public Map<String, Object> challenge(@RequestParam String deviceUuid) {

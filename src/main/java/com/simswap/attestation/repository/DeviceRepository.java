@@ -7,6 +7,8 @@ package com.simswap.attestation.repository;
 
 import com.simswap.attestation.model.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -14,5 +16,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface DeviceRepository extends JpaRepository<Device, String> {
 
+    @Query("SELECT d.privateKey FROM Device d WHERE d.deviceUuid = :deviceUuid")
+    String getPrivateKeyByDeviceUUID(@Param("deviceUuid") String deviceUuid);
     
-}
+    @Query("SELECT d.publicKey FROM Device d WHERE d.deviceUuid = :deviceUuid")
+    String getPublicKeyByDeviceUUID(@Param("deviceUuid") String deviceUuid);
+} 

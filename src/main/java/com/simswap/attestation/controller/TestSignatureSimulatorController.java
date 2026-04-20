@@ -53,7 +53,7 @@ public class TestSignatureSimulatorController {
 
         Device device = new Device();
         device.setDeviceUuid(deviceUuid);
-        device.setPublicKey(publicKeyBase64);
+        //device.setPublicKey(publicKeyBase64);
 
         deviceRepository.save(device);
 

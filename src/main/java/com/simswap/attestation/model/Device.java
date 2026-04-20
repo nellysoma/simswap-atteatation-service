@@ -5,6 +5,7 @@
 
 package com.simswap.attestation.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.security.PrivateKey;
@@ -25,11 +26,15 @@ public class Device {
     @Id
     private String deviceUuid;
 
-    //private String publicKey;
-
-    private PublicKey publicKey;
+    @Column(columnDefinition = "TEXT")
+    private String publicKey;
     
-    private PrivateKey privateKey;
+    @Column(columnDefinition = "TEXT")
+    private String privateKey;
+
+    //private PublicKey publicKey;
+    
+    //private PrivateKey privateKey;
     
     private Instant createdAt = Instant.now();
 

@@ -13,6 +13,8 @@ import java.util.Map;
 
 import com.simswap.attestation.repository.DeviceRepository;
 import com.simswap.attestation.model.Device;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 
 /**
  *
@@ -48,9 +50,14 @@ public class SimulatedDeviceService {
         PublicKey publicKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
         
+        String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        String privateKeyString = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+        
         device.setDeviceUuid(deviceUuid);
-        device.setPublicKey(publicKey);
-        device.setPrivateKey(privateKey);
+        device.setPublicKey(publicKeyString);
+        device.setPrivateKey(privateKeyString);
+        
+        deviceRepo.save(device);
 
         return java.util.Base64.getEncoder()
                 .encodeToString(keyPair.getPublic().getEncoded());
@@ -60,8 +67,15 @@ public class SimulatedDeviceService {
     public String sign(String deviceUuid,
                        String challenge,
                        String payload) throws Exception {
-
-        PrivateKey privateKey = privateKeyStore.get(deviceUuid);
+        
+        
+        String PrivateKeyString =  deviceRepo.getPrivateKeyByDeviceUUID(deviceUuid);
+        byte[] bytes = Base64.getDecoder().decode(PrivateKeyString);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PrivateKey privateKey = keyFactory.generatePrivate(spec);
+        
+        //PrivateKey privateKey = privateKeyStore.get(deviceUuid);
 
         Signature signature = Signature.getInstance("SHA256withRSA");
         signature.initSign(privateKey);

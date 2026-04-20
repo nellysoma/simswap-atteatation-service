@@ -29,14 +29,14 @@ public class AttestationService {
         this.challengeRepo = challengeRepo;
     }
 
-    public void enroll(String deviceUuid, String publicKey) {
+    /**public void enroll(String deviceUuid, String publicKey) {
 
         Device device = new Device();
         device.setDeviceUuid(deviceUuid);
         device.setPublicKey(publicKey);
 
         deviceRepo.save(device);
-    }
+    }**/
 
     public String generateChallenge(String deviceUuid) {
 
@@ -56,6 +56,12 @@ public class AttestationService {
                           String challenge,
                           String payload,
                           String signature) {
+        
+            System.out.println("Before if statements");
+            //System.out.println("PublicKeyString is: " + PublicKeyString );
+            System.out.println("deviceUuid is: " + deviceUuid );
+            System.out.println("challenge is: " + challenge );
+            System.out.println("signature is: " + signature );
 
         try {
 
@@ -69,9 +75,18 @@ public class AttestationService {
             if (ch == null || ch.isUsed()) return false;
 
             if (ch.getExpiresAt().isBefore(Instant.now())) return false;
+            
+            String PublicKeyString =  deviceRepo.getPrivateKeyByDeviceUUID(deviceUuid);
+            
+            System.out.println("PublicKeyString is: " + PublicKeyString );
+            System.out.println("deviceUuid is: " + deviceUuid );
+            System.out.println("challenge is: " + challenge );
+            System.out.println("signature is: " + signature );
+            
 
             boolean valid = CryptoUtil.verifySignature(
-                    device.getPublicKey(),
+                    PublicKeyString,
+                    //device.getPublicKey(),
                     challenge,
                     payload,
                     signature

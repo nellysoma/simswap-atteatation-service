@@ -19,11 +19,16 @@ public class CryptoUtil {
     
     public static boolean verifySignature(
             String publicKeyBase64,
+            //PublicKey publicKeyBase64,
             String challenge,
             String payload,
             String signatureBase64
     ) throws Exception {
         
+        // convert string to bytes
+        //byte[] keyBytes = publicKeyBase64.getEncoded();
+        
+        //convert string to PublicKey
         byte[] keyBytes = Base64.getDecoder().decode(publicKeyBase64);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
 

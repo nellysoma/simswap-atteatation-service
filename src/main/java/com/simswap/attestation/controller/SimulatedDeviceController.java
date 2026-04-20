@@ -23,32 +23,26 @@ public class SimulatedDeviceController {
 
     private final SimulatedDeviceService simulatedDeviceService;
 
-    public SimulatedDeviceController(
-            SimulatedDeviceService simulatedDeviceService
-    ) {
+    public SimulatedDeviceController(SimulatedDeviceService simulatedDeviceService) {
         this.simulatedDeviceService = simulatedDeviceService;
     }
 
     @PostMapping("/simulate-enroll")
-    public Map<String, String> enroll(
-            @RequestBody Map<String, String> body
-    ) throws Exception {
+    public Map<String, String> enroll(@RequestBody Map<String, String> body) throws Exception {
 
         String deviceUuid = body.get("deviceUuid");
 
-        String publicKey =
-                simulatedDeviceService.enrollDevice(deviceUuid);
+        String publicKey = simulatedDeviceService.enrollDevice(deviceUuid);
 
         return Map.of(
                 "deviceUuid", deviceUuid,
                 "publicKeyBase64", publicKey
+                
         );
     }
 
     @PostMapping("/simulate-sign")
-    public Map<String, String> sign(
-            @RequestBody Map<String, String> body
-    ) throws Exception {
+    public Map<String, String> sign(@RequestBody Map<String, String> body) throws Exception {
 
         String signature = simulatedDeviceService.sign(
                 body.get("deviceUuid"),
