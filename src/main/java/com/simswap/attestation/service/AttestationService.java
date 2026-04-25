@@ -66,17 +66,22 @@ public class AttestationService {
         try {
 
             Device device = deviceRepo.findById(deviceUuid).orElse(null);
+            
+            System.out.println("Device is revoked: " + device.isRevoked() );
+            
             if (device == null || device.isRevoked()) return false;
 
             Challenge ch = challengeRepo
                     .findTopByDeviceUuidAndChallengeAndUsedFalseOrderByIdDesc(
                             deviceUuid, challenge);
+            
+            System.out.println("challenge from database is: " + ch.getChallenge() );
 
             if (ch == null || ch.isUsed()) return false;
 
-            if (ch.getExpiresAt().isBefore(Instant.now())) return false;
+            //if (ch.getExpiresAt().isBefore(Instant.now())) return false;
             
-            String PublicKeyString =  deviceRepo.getPrivateKeyByDeviceUUID(deviceUuid);
+            String PublicKeyString =  deviceRepo.getPublicKeyByDeviceUUID(deviceUuid);
             
             System.out.println("PublicKeyString is: " + PublicKeyString );
             System.out.println("deviceUuid is: " + deviceUuid );
