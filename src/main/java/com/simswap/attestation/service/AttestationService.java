@@ -6,6 +6,7 @@
 package com.simswap.attestation.service;
 
 import com.simswap.attestation.model.Challenge;
+import com.simswap.attestation.model.Decision;
 import com.simswap.attestation.model.Device;
 import com.simswap.attestation.repository.ChallengeRepository;
 import com.simswap.attestation.repository.DeviceRepository;
@@ -23,10 +24,12 @@ public class AttestationService {
 
     private final DeviceRepository deviceRepo;
     private final ChallengeRepository challengeRepo;
+    private final FraudDecisionEngine fraudDecisionEngine;
 
-    public AttestationService(DeviceRepository deviceRepo,ChallengeRepository challengeRepo) {
+    public AttestationService(DeviceRepository deviceRepo, ChallengeRepository challengeRepo, FraudDecisionEngine fraudDecisionEngine) {
         this.deviceRepo = deviceRepo;
         this.challengeRepo = challengeRepo;
+        this.fraudDecisionEngine = fraudDecisionEngine;
     }
 
     /**public void enroll(String deviceUuid, String publicKey) {
@@ -98,11 +101,17 @@ public class AttestationService {
             );
 
             if (!valid) return false;
+            
+            Decision decision = fraudDecisionEngine.evaluate(deviceUuid, payload);
 
             ch.setUsed(true);
             challengeRepo.save(ch);
 
-            return true;
+            //return true;
+            //return decision != Decision.DENY;
+            return decision != Decision.DENY;
+            
+            //if (decision == Decision.ALLOW )
 
         } catch (Exception e) {
             return false;
